@@ -1,0 +1,39 @@
+# Ignore build artifacts
+bin/
+obj/
+
+# Ignore logs and temp files
+logs/
+*.log
+*.tmp
+
+# Ignore user-specific files
+.vscode/
+.idea/
+*.suo
+*.user
+*.vs
+*.DS_Store
+
+# Ignore system-generated files
+Thumbs.db
+.env
+
+# Ignore dependency caches
+node_modules/
+packages/
+
+# Ignore compiled binaries
+*.dll
+*.exe
+*.pdb
+
+# Ignore security-sensitive files
+secrets.json
+appsettings.Local.json
+
+# Ignore Swagger generated files
+swagger-output.json
+
+# Ignore Docker-related files
+docker-compose.override.yml
