@@ -4,7 +4,7 @@ obj/
 
 # Ignore logs and temp files
 logs/
-*.log
+#*.log
 *.tmp
 
 # Ignore user-specific files
