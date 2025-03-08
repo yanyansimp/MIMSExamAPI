@@ -55,9 +55,9 @@ dotnet restore
 
 Example:
 ```json
-"ConnectionStrings": {
-    "DefaultConnection": "Server=YOUR_SERVER_NAME;Database=MIMSExamDB;User Id=YOUR_USERNAME;Password=YOUR_PASSWORD;"
-}
+ "ConnectionStrings": {
+    "DefaultConnection": "Server=YOUR_SERVER_NAME;Database=ProductPackagingDb;Integrated Security=True;TrustServerCertificate=True;"
+ }
 ```
 
 ### **6. Run the Application**
