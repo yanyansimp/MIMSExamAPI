@@ -31,10 +31,9 @@ The project follows **Clean Architecture**, ensuring separation of concerns with
   [GitHub Link](https://github.com/yanyansimp/MIMSExamDB)  
 - Run the provided SQL scripts in a separate database project to set up the database schema.
 
-### **2. Clone This API Project**
+### **2. Clone This API Project to a folder**
 ```sh
 git clone https://github.com/your-repo/ProductPackagingAPI.git
-cd ProductPackagingAPI
 ```
 
 ### **3. Install .NET 8**
@@ -61,6 +60,8 @@ Example:
 ```
 
 ### **6. Run the Application**
+- or make sure `WebApi` to be the startup project when using Visual Studio
+
 ```sh
 dotnet run --project WebApi
 ```
