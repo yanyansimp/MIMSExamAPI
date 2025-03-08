@@ -1,12 +1,8 @@
-
----
-
 # **ProductPackagingAPI**
 
 ## **Project Description**
 ProductPackagingAPI is a .NET 8 Web API built using Clean Architecture principles. It provides product management functionalities, including authentication and authorization using JWT. The API is versioned, allowing different versions of endpoints for flexibility.
 
----
 
 ## **Project Structure (Clean Architecture)**
 The project follows **Clean Architecture**, ensuring separation of concerns with four key layers:
