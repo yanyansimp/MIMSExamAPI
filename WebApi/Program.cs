@@ -68,20 +68,7 @@ try
 
     builder.Services.AddControllers(); // Ensure controllers are added
 
-    //// Add API versioning
-    //builder.Services.AddApiVersioning(options =>
-    //{
-    //    //options.DefaultApiVersion = new ApiVersion(1, 0);
-    //    options.DefaultApiVersion = ApiVersion.Default;
-    //    options.AssumeDefaultVersionWhenUnspecified = true;
-    //    options.ReportApiVersions = true;
-    //}).AddApiExplorer(option =>
-    //{
-    //    option.GroupNameFormat = "'v'V";
-    //    option.SubstituteApiVersionInUrl = true;
-    //});
-
-    // ✅ Register API Versioning
+    // Register API Versioning
     builder.Services.AddApiVersioning(options =>
     {
         options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -90,18 +77,18 @@ try
         options.ApiVersionReader = new UrlSegmentApiVersionReader(); // Read version from URL
     }).AddApiExplorer(options =>
     {
-        options.GroupNameFormat = "'v'VVV";  // ✅ Ensures "v1", "v2", etc.
+        options.GroupNameFormat = "'v'VVV";  // Ensures "v1", "v2", etc.
         options.SubstituteApiVersionInUrl = true;
     });
 
-    // ✅ Configure Swagger to display all API versions on a single page
+    // Configure Swagger to display all API versions on a single page
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
     {
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "Product API v1", Version = "1.0" });
         options.SwaggerDoc("v2", new OpenApiInfo { Title = "Product API v2", Version = "2.0" });
 
-        // ✅ Group endpoints using Controller name + Version
+        // Group endpoints using Controller name + Version
         options.TagActionsBy(apiDesc =>
         {
             var controllerName = apiDesc.ActionDescriptor.RouteValues["controller"];
@@ -109,7 +96,7 @@ try
                 .OfType<ApiVersionAttribute>()
                 .FirstOrDefault()?.Versions.FirstOrDefault()?.ToString();
 
-            return new[] { $"{version}" }; // ✅ Group as "ProductsV1" or "ProductsV2"
+            return new[] { $"{version}" }; // Group as "ProductsV1" or "ProductsV2"
         });
 
         options.DocInclusionPredicate((version, apiDesc) => true);
@@ -118,7 +105,7 @@ try
 
     var app = builder.Build();
 
-    // ✅ Enable Swagger on a single page
+    // Enable Swagger on a single page
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
@@ -131,7 +118,7 @@ try
                 options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"Product API {description.ApiVersion}");
             }
 
-            // ✅ Remove the version dropdown
+            // Remove the version dropdown
             options.DefaultModelsExpandDepth(-1); // Hide schemas for better readability
         });
     }

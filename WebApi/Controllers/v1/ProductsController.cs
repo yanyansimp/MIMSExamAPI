@@ -10,7 +10,7 @@ namespace WebApi.Controllers.v1
 {
     [Authorize]
     [ApiController]
-    [ApiVersion(1)]  // ✅ Ensure correct API version
+    [ApiVersion(1)]  // Ensure correct API version
     [Route("api/v{version:apiVersion}/products")]
     public class ProductsController : ControllerBase
     {

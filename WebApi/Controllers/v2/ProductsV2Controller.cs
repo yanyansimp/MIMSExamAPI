@@ -6,7 +6,7 @@ using NLog;
 namespace WebApi.Controllers.v2
 {
     [ApiController]
-    [ApiVersion(2)]  // ✅ Ensure correct API version
+    [ApiVersion(2)]  // Ensure correct API version
     [Route("api/v{version:apiVersion}/products")]
     public class ProductsV2Controller : ControllerBase
     {
