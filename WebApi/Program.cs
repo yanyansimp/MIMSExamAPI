@@ -1,12 +1,12 @@
-using Application.Services;
+﻿using Application.Services;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 using System.Text;
@@ -22,19 +22,14 @@ try
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
 
-    //builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
     // Register services and repositories
-    builder.Services.AddSingleton<DbHelper>();
+    builder.Services.AddSingleton<DbHelper>(); // Ensure correct helper name
 
     builder.Services.AddScoped<ProductService>();
     builder.Services.AddScoped<UserService>();
 
     builder.Services.AddScoped<IProductRepository, ProductRepository>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-    // Add authentication and authorization 
-    //builder.Services.AddAuthentication();
 
     // Configure JWT Authentication
     var jwtSecret = builder.Configuration["JwtSettings:Secret"];
@@ -71,27 +66,85 @@ try
 
     builder.Services.AddAuthorization();
 
-    builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddControllers(); // Ensure controllers are added
+
+    //// Add API versioning
+    //builder.Services.AddApiVersioning(options =>
+    //{
+    //    //options.DefaultApiVersion = new ApiVersion(1, 0);
+    //    options.DefaultApiVersion = ApiVersion.Default;
+    //    options.AssumeDefaultVersionWhenUnspecified = true;
+    //    options.ReportApiVersions = true;
+    //}).AddApiExplorer(option =>
+    //{
+    //    option.GroupNameFormat = "'v'V";
+    //    option.SubstituteApiVersionInUrl = true;
+    //});
+
+    // ✅ Register API Versioning
+    builder.Services.AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.ApiVersionReader = new UrlSegmentApiVersionReader(); // Read version from URL
+    }).AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";  // ✅ Ensures "v1", "v2", etc.
+        options.SubstituteApiVersionInUrl = true;
+    });
+
+    // ✅ Configure Swagger to display all API versions on a single page
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(options =>
+    {
+        options.SwaggerDoc("v1", new OpenApiInfo { Title = "Product API v1", Version = "1.0" });
+        options.SwaggerDoc("v2", new OpenApiInfo { Title = "Product API v2", Version = "2.0" });
+
+        // ✅ Group endpoints using Controller name + Version
+        options.TagActionsBy(apiDesc =>
+        {
+            var controllerName = apiDesc.ActionDescriptor.RouteValues["controller"];
+            var version = apiDesc.ActionDescriptor.EndpointMetadata
+                .OfType<ApiVersionAttribute>()
+                .FirstOrDefault()?.Versions.FirstOrDefault()?.ToString();
+
+            return new[] { $"{version}" }; // ✅ Group as "ProductsV1" or "ProductsV2"
+        });
+
+        options.DocInclusionPredicate((version, apiDesc) => true);
+    });
+
 
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
+    // ✅ Enable Swagger on a single page
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(options =>
+        {
+            var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+            foreach (var description in provider.ApiVersionDescriptions)
+            {
+                options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"Product API {description.ApiVersion}");
+            }
+
+            // ✅ Remove the version dropdown
+            options.DefaultModelsExpandDepth(-1); // Hide schemas for better readability
+        });
     }
 
+
+
     app.UseHttpsRedirection();
+    app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
 
     logger.Info("Web API started successfully.");
     app.Run();
-
 }
 catch (Exception ex)
 {
@@ -102,4 +155,3 @@ finally
 {
     LogManager.Shutdown(); // Ensures logs are flushed before exit
 }
-

@@ -23,7 +23,7 @@ namespace Application.Services
         {
             var _user = _userRepository.GetUserByUsername(user.Username);
 
-            if(_user != null && VerifyPassword(user.PasswordHash, _user.PasswordHash))
+            if(_user != null && VerifyPassword(user.Password, _user.Password))
                 return _user;
 
             return null;
@@ -32,7 +32,7 @@ namespace Application.Services
         public void RegisterUser(User user)
         {
             // Hash password before storing
-            user.PasswordHash = HashPassword(user.PasswordHash);
+            user.Password = HashPassword(user.Password);
             _userRepository.RegisterUser(user);
         }
 

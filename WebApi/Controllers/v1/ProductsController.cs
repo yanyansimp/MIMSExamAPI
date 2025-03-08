@@ -1,15 +1,17 @@
 ﻿using Application.Services;
+using Asp.Versioning;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using NLog;
 
-namespace WebApi.Controllers
+namespace WebApi.Controllers.v1
 {
     [Authorize]
     [ApiController]
-    [Route("api/v1/products")]
+    [ApiVersion(1)]  // ✅ Ensure correct API version
+    [Route("api/v{version:apiVersion}/products")]
     public class ProductsController : ControllerBase
     {
         private readonly ProductService _productService;
@@ -20,14 +22,14 @@ namespace WebApi.Controllers
             _productService = productService;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetProductsV1")]
         public ActionResult<List<Product>> GetProducts()
         {
-            Logger.Info("Fetching all products.");
+            Logger.Info("Fetching products (v1).");
             return Ok(_productService.GetAllProducts());
         }
 
-        [HttpPost]
+        [HttpPost(Name = "AddProductV1")]
         public IActionResult AddProduct([FromBody] Product product)
         {
             _productService.AddProduct(product);

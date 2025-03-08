@@ -35,7 +35,7 @@ namespace Infrastructure.Repositories
                         {
                             UserID = reader.GetInt32(0),
                             Username = reader.GetString(1),
-                            PasswordHash = reader.GetString(2)
+                            Password = reader.GetString(2)
                         };
                     }
                 }
@@ -51,7 +51,7 @@ namespace Infrastructure.Repositories
                 connection.Open();
                 var command = new SqlCommand("INSERT INTO Users (Username, PasswordHash) VALUES (@username, @password)", connection);
                 command.Parameters.AddWithValue("@username", user.Username);
-                command.Parameters.AddWithValue("@password", user.PasswordHash);
+                command.Parameters.AddWithValue("@password", user.Password);
                 command.ExecuteNonQuery();
             }
         }

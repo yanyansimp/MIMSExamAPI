@@ -26,5 +26,10 @@ namespace Application.Services
         {
             _productRepository.AddProduct(product);
         }
+
+        public List<object> GetProductsWithPackaging()
+        {
+            return _productRepository.GetProductsWithPackaging();
+        }
     }
 }

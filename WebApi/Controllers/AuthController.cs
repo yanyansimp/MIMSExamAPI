@@ -9,6 +9,7 @@ using System.Text;
 
 namespace WebApi.Controllers
 {
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly UserService _userService;
@@ -24,7 +25,7 @@ namespace WebApi.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] User user)
         {
-            if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.PasswordHash))
+            if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
             {
                 return BadRequest("Username and password are required.");
             }
