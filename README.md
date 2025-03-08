@@ -60,7 +60,7 @@ Example:
 ```
 
 ### **6. Run the Application**
-- or make sure `WebApi` to be the startup project when using Visual Studio
+Or make sure `WebApi` to be the startup project when using Visual Studio
 
 ```sh
 dotnet run --project WebApi
@@ -73,7 +73,9 @@ The API should now be running at:
 ## **Testing the API**
 
 ### **Postman Collection**
-A Postman collection is included in the project for testing. Import it into Postman.
+A Postman collection is included in the project for testing. 
+
+Import the file `ProductPackagingAPI.postman_collection` to Postman.
 
 ### **Endpoints to Check Authentication**
 #### Unauthorized Requests:
