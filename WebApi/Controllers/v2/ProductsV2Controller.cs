@@ -1,10 +1,12 @@
 ﻿using Application.Services;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 
 namespace WebApi.Controllers.v2
 {
+    [Authorize]
     [ApiController]
     [ApiVersion(2)]  // Ensure correct API version
     [Route("api/v{version:apiVersion}/products")]
